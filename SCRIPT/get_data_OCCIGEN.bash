@@ -1,11 +1,9 @@
 #!/bin/bash -l
-#SBATCH --mem=1G
-#SBATCH --time=10
+#SBATCH --mem=500
+#SBATCH --time=60
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
-#SBATCH --constraint BDW28
-
-set -x
+#SBATCH --constraint HSW24
 
 CONFIG=$1
 RUNID=$2
@@ -13,22 +11,15 @@ FREQ=$3
 TAG=$4
 GRID=$5
 
-echo $SCRATCHDIR
-
 # load default parameter
 . param.bash
-
-echo $SCRATCHDIR
 #
 # load config dependant parameter
 . PARAM/param_${CONFIG}.bash
-
-echo $SCRATCHDIR
 #
 # make links
 . ${SCRPATH}/common.bash
 
-echo $SCRATCHDIR
 cd ${DATPATH}
 
 # get data
