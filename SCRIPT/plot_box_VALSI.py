@@ -47,9 +47,23 @@ class box(object):
         self.ymax=corner[3]-1
         self.name=name
 
-cfile='eORCA025.L121-OPM020/mask.nc'
+cfile='./mask.nc'
 ncid   = nc.Dataset(cfile)
-bathy = ncid.variables['bathy_metry'][:,0:-2,:].squeeze()
+bathy = ncid.variables['bathy_metry'][0,0:-2,:]
+ncid.close()
+cfile='./msk_AMU_shelf.nc'
+ncid   = nc.Dataset(cfile)
+mskAMU = ncid.variables['tmask'][0,0:-2,:]
+ncid.close()
+cfile='./msk_ROSS_shelf.nc'
+ncid   = nc.Dataset(cfile)
+mskROSS = ncid.variables['tmask'][0,0:-2,:]
+ncid.close()
+cfile='./msk_WED_shelf.nc'
+ncid   = nc.Dataset(cfile)
+mskFRIS = ncid.variables['tmask'][0,0:-2,:]
+ncid.close()
+cfile='./mesh.nc'
 ncid   = nc.Dataset(cfile)
 lon = ncid.variables['nav_lon'][0:-2,:]
 lat = ncid.variables['nav_lat'][0:-2,:]
@@ -58,18 +72,7 @@ j_lst,i_lst=np.nonzero(delta_lon>180)
 for idx in range(0,len(j_lst)):
     lon[j_lst[idx], i_lst[idx]+1:] += 360
 
-box_lst=[]
-box_lst.append(box([710,741,202,266],'AMU'))
-box_lst.append(box([891,938,204,258],'WWED'))
-box_lst.append(box([347,404,150,233],'WROSS'))
-box_lst.append(box([448,519,152,180],'EROSS'))
-box_lst.append(box([1025,1300,325,380],'WG'))
-box_lst.append(box([476,607 ,254,370],'RG'))
-box_lst.append(box([968,1020,159,190],'EWED'))
-
 mask=np.zeros(shape=bathy.shape)
-for box in box_lst:
-    mask[box.ymin:box.ymax,box.xmin:box.xmax] = 1.0
 
 proj=ccrs.Stereographic(central_latitude=-90.0, central_longitude=0.0)
 XY_lim=[-180, 180, -90, -45]
@@ -77,25 +80,23 @@ plt.figure(figsize=np.array([210, 210]) / 25.4)
 ax=plt.subplot(1, 1, 1, projection=proj)
 #ax=plt.subplot(1, 1, 1)
 add_land_features(ax,['isf','lakes','land'])
-
-print(lon.shape, lat.shape, bathy.shape)
 ax.pcolormesh(lon,lat,bathy,cmap='Blues',vmin=0,vmax=7000,transform=ccrs.PlateCarree(),rasterized=True)
 
-ax.contour(lon,lat,mask,levels=[0.99, 2.0],transform=ccrs.PlateCarree(),colors='k',rasterized=True,linewidths=2)
+#ax.contour(lon,lat,mask,levels=[0.99, 2.0],transform=ccrs.PlateCarree(),colors='k',rasterized=True,linewidths=2)
+ax.contour(lon,lat,mskAMU,levels=[0.99, 2.0],transform=ccrs.PlateCarree(),colors='royalblue',rasterized=True,linewidths=2)
+ax.contour(lon,lat,mskFRIS,levels=[0.99, 2.0],transform=ccrs.PlateCarree(),colors='sienna',rasterized=True,linewidths=2)
+ax.contour(lon,lat,mskROSS,levels=[0.99, 2.0],transform=ccrs.PlateCarree(),colors='darkred',rasterized=True,linewidths=2)
 
-ax.plot([lon[420,874], lon[332,899]],[lat[420,874], lat[332,899]],transform=ccrs.PlateCarree(),color='k',linewidth=2,rasterized=True)
-ax.text(lon[420,874]-5,lat[420,874]-3,'ACC',transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
-
-box=box_lst[0]; ax.text(lon[box.ymin,box.xmin]-1, lat[box.ymin,box.xmin]-1,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
-box=box_lst[1]; ax.text(lon[box.ymin,box.xmin]-20, lat[box.ymin,box.xmin]+4,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
-box=box_lst[2]; ax.text(lon[box.ymin,box.xmin], lat[box.ymin,box.xmin]-1,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
-box=box_lst[3]; ax.text(lon[box.ymin,box.xmin]+45, lat[box.ymin,box.xmin]+3,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
-box=box_lst[4]; ax.text(lon[box.ymin,box.xmin]+30, lat[box.ymin,box.xmin]+10,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
-box=box_lst[5]; ax.text(lon[box.ymin,box.xmin]+15, lat[box.ymin,box.xmin]+5,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
-box=box_lst[6]; ax.text(lon[box.ymax,box.xmax]+1, lat[box.ymax,box.xmax]+1,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
+ax.text(172.0 , -81.0 , 'ROSS', transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
+ax.text(-52.0 , -81.0 , 'FRIS', transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
+ax.text(-117.0 , -74.0 , 'AMU', transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
+#box=box_lst[1]; ax.text(lon[box.ymin,box.xmin], lat[box.ymin,box.xmin]-2,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
+#box=box_lst[2]; ax.text(lon[box.ymin,box.xmin], lat[box.ymin,box.xmin]-1,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
+#box=box_lst[3]; ax.text(lon[box.ymin,box.xmin]+45, lat[box.ymin,box.xmin]+3,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
+#box=box_lst[4]; ax.text(lon[box.ymin,box.xmin]+30, lat[box.ymin,box.xmin]+10,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
+#box=box_lst[5]; ax.text(lon[box.ymin,box.xmin]+15, lat[box.ymin,box.xmin]+5,box.name,transform=ccrs.PlateCarree(),color='k',fontweight='bold',fontsize=16)
 
 #pcol=ax.pcolormesh(lon,lat,bathy)
 ax.set_extent(XY_lim, ccrs.PlateCarree())
-plt.savefig('box.png', format='png', dpi=150)
+plt.savefig('box_VALSI.png', format='png', dpi=150)
 plt.show()
-

@@ -2,32 +2,44 @@
 
 ulimit -s unlimited
 
-# where mask are stored (name of mesh mask in SCRIPT/common.bash)
-MSKPATH=${DATADIR}/MESH_MASK/
+# specify SCRATCHDIR as sometime the default value can be wrong because of ldap_start_tls: Can't contact LDAP server (-1)
+SCRATCHDIR=/scratch/cnt0021/egi6035/pmathiot/
+
 # where cdftools are stored
 #CDFPATH=/project/nemo/TOOLS/CDFTOOLS/CDFTOOLS_4.0_master/bin/
-CDFPATH=/home/h05/pmathiot/TOOLS/CDFTOOLS_4.0/bin
-# toolbox location
-EXEPATH=${HOME}/VALSO/
-# SCRIPT location
-SCRPATH=${HOME}/VALSO/SCRIPT/
-# DATA path (CONFIG and RUNID are fill by script
-DATPATH=${SCRATCH}/ACC/$CONFIG/$RUNID/           
+CDFPATH=${HOME}/GIT/CDFTOOLS_4.0_ISF/bin
+
+# toolbox location (where the toolbox is installed)
+EXEPATH=${HOME}/GIT/VALSO/
+
+# SCRIPT location (where script are, no need to be changed)
+SCRPATH=${EXEPATH}/SCRIPT/
+
+# WORK path (where all the processing will be done)
+WRKPATH=/work/pmathiot/VALSO/
 
 # diagnostics bundle
 RUNVALSO=0
 RUNVALGLO=0
+RUNVALSI=0
+RUNVALAMU=0
 RUNALL=1
 # custom
 runACC=0
 runMLD=0
-runBSF=1
+runBSF=0
 runBOT=0
 runMOC=0
 runMHT=0
 runSIE=0
 runSST=0
 runQHF=0
+runISF=0
+runICB=0
+runMEAN=0
+runEKE=0
+#
+runOBS=0
 #
 if [[ $RUNALL == 1 || $RUNTEST == 1 ]]; then
    runACC=1 #acc  ts
@@ -39,6 +51,10 @@ if [[ $RUNALL == 1 || $RUNTEST == 1 ]]; then
    runSIE=1
    runSST=1
    runQHF=1
+   runISF=1
+   runICB=1
+   runMEAN=1
+   runEKE=1
 elif [[ $RUNVALSO == 1 ]]; then
    runACC=1 #acc  ts
    runMLD=1 #mld  ts
@@ -50,10 +66,12 @@ elif [[ $RUNVALGLO == 1 ]]; then
    runSIE=1
    runSST=1
    runQHF=1
-#else
-#   echo 'need to define what you want in param.bash; exit 42'
-#   exit 42
+elif [[ $RUNVALSI == 1 ]]; then
+   runISF=1
+   runICB=1
+   runBOT=1
+elif [[ $RUNVALAMU == 1 ]]; then
+   runISF=1
+   runBOT=1
+   runSIE=1
 fi
-   
-
-module load gcc/8.1.0 mpi/mpich/3.2.1/gnu/8.1.0 hdf5/1.8.20/gnu/8.1.0 netcdf/4.6.1/gnu/8.1.0
