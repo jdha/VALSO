@@ -194,12 +194,14 @@ def parse_dbfile(runid):
                     cpltcolor = att[3].strip()
                     lstyle=True
         if not lstyle:
+
             print( runid+' not found in style.db' )
             raise Exception
 
     except Exception as e:
         print( 'Issue with file : style.db' )
         print( e )
+
         sys.exit(42)
 
     # return value
@@ -269,7 +271,9 @@ def main():
                     fglob = args.f[irun]
                 cfile = glob.glob(args.dir[0]+'/'+runid+'/'+fglob)
                 if len(cfile)==0:
+
                     print( 'no file found with this pattern '+args.dir[0]+'/'+runid+'/'+fglob )
+
                     sys.exit(42)
             elif args.varf:
                # in case only one file pattern given
@@ -279,12 +283,16 @@ def main():
                     fglob = args.varf[ivar]
                 cfile = glob.glob(args.dir[0]+'/'+runid+'/'+fglob)
                 if len(cfile)==0:
+
                     print( 'no file found with this pattern '+args.dir[0]+'/'+runid+'/'+fglob )
+
                     sys.exit(42)
             else:
                 cfile = glob.glob(args.dir[0]+'/'+runid+'_'+cvar+'.nc')
                 if len(cfile)==0:
+
                     print( 'no file found with this pattern '+args.dir[0]+'/'+runid+'_'+cvar+'.nc' )
+
                     sys.exit(42)
 
             run_lst[irun].load_time_series(cfile, cvar, sf[ivar])
