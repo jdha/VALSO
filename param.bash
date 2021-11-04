@@ -19,7 +19,7 @@ SCRPATH=${EXEPATH}/SCRIPT/
 WRKPATH=/work/pmathiot/VALSO/
 
 # diagnostics bundle
-RUNVALSO=0
+RUNVALSO=1
 RUNVALGLO=0
 RUNVALSI=0
 RUNVALAMU=0
@@ -75,3 +75,5 @@ elif [[ $RUNVALAMU == 1 ]]; then
    runBOT=1
    runSIE=1
 fi
+
+module load gcc/8.1.0 mpi/mpich/3.2.1/gnu/8.1.0 hdf5/1.8.20/gnu/8.1.0 netcdf/4.6.1/gnu/8.1.0

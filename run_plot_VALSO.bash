@@ -9,7 +9,12 @@ if [ $# -eq 0 ] ; then echo 'need a [KEYWORD] (will be inserted inside the outpu
 KEY=${1}
 FREQ=${2}
 RUNIDS=${@:3}
+
+SVAR='(mean_so|mean_vosaline|mean_so_abs)'
+TVAR='(mean_thetao|mean_votemper|mean_thetao_con)'
+
 echo $RUNIDS
+
 
 # ACC
 # Drake
@@ -36,11 +41,11 @@ if [[ $? -ne 0 ]]; then exit 42; fi
 # mean S WROSS
 echo 'plot mean bot S (WROSS) time series'
 
-python SCRIPT/plot_time_series.py -noshow -runid $RUNIDS -f *WROSS*so*${FREQ}*T.nc -var '(mean_sosbs|mean_vosaline)' -title "Mean bot. sal. WROSS (PSU)" -dir ${WRKPATH} -o ${KEY}_WROSS_mean_bot_so -obs OBS/WROSS_botS_mean_obs.txt
+python SCRIPT/plot_time_series.py -noshow -runid $RUNIDS -f *WROSS*so*${FREQ}*T.nc -var $SVAR -title "Mean bot. sal. WROSS (PSU)" -dir ${WRKPATH} -o ${KEY}_WROSS_mean_bot_so -obs OBS/WROSS_botS_mean_obs.txt
 # mean S WWED
 if [[ $? -ne 0 ]]; then exit 42; fi
 echo 'plot mean bot S (WWED) time series'
-python SCRIPT/plot_time_series.py -noshow -runid $RUNIDS -f *WWED*so*${FREQ}*T.nc   -var '(mean_sosbs|mean_vosaline)' -title "Mean bot. sal. WWED  (PSU)" -dir ${WRKPATH} -o ${KEY}_WWED_mean_bot_so  -obs OBS/WWED_botS_mean_obs.txt
+python SCRIPT/plot_time_series.py -noshow -runid $RUNIDS -f *WWED*so*${FREQ}*T.nc   -var $SVAR -title "Mean bot. sal. WWED  (PSU)" -dir ${WRKPATH} -o ${KEY}_WWED_mean_bot_so  -obs OBS/WWED_botS_mean_obs.txt
 
 if [[ $? -ne 0 ]]; then exit 42; fi
 
@@ -48,19 +53,19 @@ if [[ $? -ne 0 ]]; then exit 42; fi
 # mean T AMU
 echo 'plot mean bot T (AMU) time series'
 
-python SCRIPT/plot_time_series.py -noshow -runid $RUNIDS -f *AMU_*thetao*${FREQ}*T.nc   -var '(mean_sosbt|mean_votemper)' -title "Mean bot. temp. AMU (C)"   -dir ${WRKPATH} -o ${KEY}_AMU_mean_bot_thetao   -obs OBS/AMU_botT_mean_obs.txt
+python SCRIPT/plot_time_series.py -noshow -runid $RUNIDS -f *AMU_*thetao*${FREQ}*T.nc   -var $TVAR -title "Mean bot. temp. AMU (C)"   -dir ${WRKPATH} -o ${KEY}_AMU_mean_bot_thetao   -obs OBS/AMU_botT_mean_obs.txt
 
 if [[ $? -ne 0 ]]; then exit 42; fi
 
 # mean T EROSS
 echo 'plot mean bot T (EROSS) time series'
 
-python SCRIPT/plot_time_series.py -noshow -runid $RUNIDS -f *EROSS*thetao*${FREQ}*T.nc -var '(mean_sosbt|mean_votemper)' -title "Mean bot. temp. EROSS (C)" -dir ${WRKPATH} -o ${KEY}_EROSS_mean_bot_thetao -obs OBS/EROSS_botT_mean_obs.txt
+python SCRIPT/plot_time_series.py -noshow -runid $RUNIDS -f *EROSS*thetao*${FREQ}*T.nc -var $TVAR -title "Mean bot. temp. EROSS (C)" -dir ${WRKPATH} -o ${KEY}_EROSS_mean_bot_thetao -obs OBS/EROSS_botT_mean_obs.txt
 if [[ $? -ne 0 ]]; then exit 42; fi
 
 # mean T EROSS
 echo 'plot mean bot T (EWED) time series'
-python SCRIPT/plot_time_series.py -noshow -runid $RUNIDS -f *EWED*thetao*${FREQ}*T.nc -var '(mean_sosbt|mean_votemper)' -title "Mean bot. temp. EWED (C)" -dir ${WRKPATH} -o ${KEY}_EWED_mean_bot_thetao -obs OBS/EWED_botT_mean_obs.txt
+python SCRIPT/plot_time_series.py -noshow -runid $RUNIDS -f *EWED*thetao*${FREQ}*T.nc -var $TVAR -title "Mean bot. temp. EWED (C)" -dir ${WRKPATH} -o ${KEY}_EWED_mean_bot_thetao -obs OBS/EWED_botT_mean_obs.txt
 
 if [[ $? -ne 0 ]]; then exit 42; fi
 

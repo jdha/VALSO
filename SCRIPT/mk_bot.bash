@@ -51,6 +51,8 @@ else
    ln -sf $FILE $FILEOUT
 fi
 
+TVAR='|thetao|votemper|thetao_con|'
+SVAR='|so|vosaline|so_abs|'
 set -x
 # Amundsen avg (CDW)
 ijbox=$($CDFPATH/cdffindij -c mesh.nc -p T -w -109.640 -102.230  -75.800  -71.660 | tail -2 | head -1)
